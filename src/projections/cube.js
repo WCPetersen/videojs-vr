@@ -54,6 +54,7 @@ class Cube360 extends Projection {
 
     const mesh = new THREE.Mesh(geometry, material);
     mesh.rotation.y = -Math.PI;
+    mesh.scale.x = -1;
 
     return mesh;
   }

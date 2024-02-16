@@ -8,7 +8,7 @@ class EAC extends Projection {
     // we truncate the 2-pixel-wide strips on all discontinuous edges,
     const contCorrect = 2;
 
-    const geometry = new THREE.BoxBufferGeometry(256, 256, 256);
+    const geometry = new THREE.BoxGeometry(256, 256, 256);
     const material = new THREE.ShaderMaterial({
       side: THREE.BackSide,
       uniforms: {
@@ -49,12 +49,12 @@ void main() {
 }`
     });
 
-    const right = [new THREE.Vector2(0, 1 / 2), new THREE.Vector2(1 / 3, 1 / 2), new THREE.Vector2(1 / 3, 1), new THREE.Vector2(0, 1)];
-    const front = [new THREE.Vector2(1 / 3, 1 / 2), new THREE.Vector2(2 / 3, 1 / 2), new THREE.Vector2(2 / 3, 1), new THREE.Vector2(1 / 3, 1)];
-    const left = [new THREE.Vector2(2 / 3, 1 / 2), new THREE.Vector2(1, 1 / 2), new THREE.Vector2(1, 1), new THREE.Vector2(2 / 3, 1)];
-    const bottom = [new THREE.Vector2(1 / 3, 0), new THREE.Vector2(1 / 3, 1 / 2), new THREE.Vector2(0, 1 / 2), new THREE.Vector2(0, 0)];
-    const back = [new THREE.Vector2(1 / 3, 1 / 2), new THREE.Vector2(1 / 3, 0), new THREE.Vector2(2 / 3, 0), new THREE.Vector2(2 / 3, 1 / 2)];
-    const top = [new THREE.Vector2(1, 0), new THREE.Vector2(1, 1 / 2), new THREE.Vector2(2 / 3, 1 / 2), new THREE.Vector2(2 / 3, 0)];
+    const left = [new THREE.Vector2(1, 1), new THREE.Vector2(2 / 3, 1), new THREE.Vector2(1, 1 / 2), new THREE.Vector2(2 / 3, 1 / 2)];
+    const right = [new THREE.Vector2(1 / 3, 1), new THREE.Vector2(0, 1), new THREE.Vector2(1 / 3, 1 / 2), new THREE.Vector2(0, 1 / 2)];
+    const top = [new THREE.Vector2(1, 0), new THREE.Vector2(1, 1 / 2), new THREE.Vector2(2 / 3, 0), new THREE.Vector2(2 / 3, 1 / 2)];
+    const bottom = [new THREE.Vector2(1 / 3, 0), new THREE.Vector2(1 / 3, 1 / 2), new THREE.Vector2(0, 0), new THREE.Vector2(0, 1 / 2)];
+    const back = [new THREE.Vector2(2 / 3, 0), new THREE.Vector2(2 / 3, 1 / 2), new THREE.Vector2(1 / 3, 0), new THREE.Vector2(1 / 3, 1 / 2)];
+    const front = [new THREE.Vector2(2 / 3, 1), new THREE.Vector2(1 / 3, 1), new THREE.Vector2(2 / 3, 1 / 2), new THREE.Vector2(1 / 3, 1 / 2)];
 
     for (const face of [right, front, left, bottom, back, top]) {
       const height = this.videoTexture.image.videoHeight;
@@ -84,26 +84,43 @@ void main() {
 
     const uvs = geometry.getAttribute('uv');
 
-    uvs.setXYZ(0, right[2], right[1], right[3]);
-    uvs.setXYZ(1, right[1], right[0], right[3]);
+    // LEFT
+    uvs.setXY(0, left[0].x, left[0].y);
+    uvs.setXY(1, left[1].x, left[1].y);
+    uvs.setXY(2, left[2].x, left[2].y);
+    uvs.setXY(3, left[3].x, left[3].y);
 
-    uvs.setXYZ(2, left[2], left[1], left[3]);
-    uvs.setXYZ(3, left[1], left[0], left[3]);
+    // RIGHT
+    uvs.setXY(4, right[0].x, right[0].y);
+    uvs.setXY(5, right[1].x, right[1].y);
+    uvs.setXY(6, right[2].x, right[2].y);
+    uvs.setXY(7, right[3].x, right[3].y);
 
-    uvs.setXYZ(4, top[2], top[1], top[3]);
-    uvs.setXYZ(5, top[1], top[0], top[3]);
+    // TOP/UP
+    uvs.setXY(8, top[0].x, top[0].y);
+    uvs.setXY(9, top[1].x, top[1].y);
+    uvs.setXY(10, top[2].x, top[2].y);
+    uvs.setXY(11, top[3].x, top[3].y);
 
-    uvs.setXYZ(6, bottom[2], bottom[1], bottom[3]);
-    uvs.setXYZ(7, bottom[1], bottom[0], bottom[3]);
+    // BOTTOM/DOWN
+    uvs.setXY(12, bottom[0].x, bottom[0].y);
+    uvs.setXY(13, bottom[1].x, bottom[1].y);
+    uvs.setXY(14, bottom[2].x, bottom[2].y);
+    uvs.setXY(15, bottom[3].x, bottom[3].y);
 
-    uvs.setXYZ(8, front[2], front[1], front[3]);
-    uvs.setXYZ(9, front[1], front[0], front[3]);
+    // BACK
+    uvs.setXY(16, back[0].x, back[0].y);
+    uvs.setXY(17, back[1].x, back[1].y);
+    uvs.setXY(18, back[2].x, back[2].y);
+    uvs.setXY(19, back[3].x, back[3].y);
 
-    uvs.setXYZ(10, back[2], back[1], back[3]);
-    uvs.setXYZ(11, back[1], back[0], back[3]);
+    // FRONT
+    uvs.setXY(20, front[0].x, front[0].y);
+    uvs.setXY(21, front[1].x, front[1].y);
+    uvs.setXY(22, front[2].x, front[2].y);
+    uvs.setXY(23, front[3].x, front[3].y);
 
     const mesh = new THREE.Mesh(geometry, material);
-    mesh.rotation.y = -Math.PI;
 
     return mesh;
   }

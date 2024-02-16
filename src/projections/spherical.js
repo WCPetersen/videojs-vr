@@ -101,8 +101,54 @@ class Sphere180_TB extends Sphere180 {
   split = 'TB'
 }
 
+// FOV could be moved into options, like sphereRadius
+class SphereFisheye extends SphericalProjection {
+  split = 'LR' // No examples of mono fisheye found, defaulting to LR
+  FOV = 180
+  get rFOV() { return Math.PI * (this.FOV / 180); }
+
+  createMesh() {
+      const geometry = new THREE.SphereGeometry(
+          this.options.sphereRadius,
+          this.options.sphereDetail,
+          this.options.sphereDetail,
+          0,
+          Math.PI * 2,
+          0,
+          this.rFOV / 2
+      );
+      const material = new THREE.MeshBasicMaterial({ map: this.videoTexture, side: THREE.BackSide });
+      const mesh = new THREE.Mesh(geometry, material);
+      mesh.scale.x = -1;
+      mesh.rotation.x = -Math.PI/2;
+
+      // Warp the mesh for fisheye textures
+      const uvs = geometry.getAttribute('uv');
+      for (let i = 0; i < uvs.count; i++) {
+          const th = 2 * Math.PI * uvs.getX(i);
+          const r = 1 - uvs.getY(i);
+          const x2 = r * Math.cos(th);
+          const y2 = r * Math.sin(th);
+
+          uvs.setX(i, 0.5 + x2 / 2);
+          uvs.setY(i, 0.5 + y2 / 2);
+      }
+
+      return mesh;
+  }
+}
+
+class SphereFisheye190 extends SphereFisheye {
+  FOV = 190
+}
+
+class SphereFisheye200 extends SphereFisheye {
+  FOV = 200
+}
+
 export {
   SphericalProjection,
   Sphere360, Sphere360_LR, Sphere360_TB,
-  Sphere180, Sphere180_LR, Sphere180_TB
+  Sphere180, Sphere180_LR, Sphere180_TB,
+  SphereFisheye, SphereFisheye190, SphereFisheye200
 };

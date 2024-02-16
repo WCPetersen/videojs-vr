@@ -42,7 +42,9 @@ export const validProjections = [
   '180',
   '180_LR',
   '180_TB',
-  '180_MONO'
+  '180_MONO',
+  'FISHEYE_190',
+  'FISHEYE_200',
 ];
 
 export const getInternalProjectionName = function(projection) {

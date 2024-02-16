@@ -1,6 +1,7 @@
 import {
   Sphere360, Sphere360_LR, Sphere360_TB,
-  Sphere180, Sphere180_LR, Sphere180_TB
+  Sphere180, Sphere180_LR, Sphere180_TB,
+  SphereFisheye190, SphereFisheye200
 } from './spherical.js';
 import { EAC, EAC_LR } from './eac.js';
 import Cube360 from './cube.js';
@@ -13,6 +14,8 @@ export default {
   '180_MONO': Sphere180,
   '180_LR':   Sphere180_LR,
   '180_TB':   Sphere180_TB,
+  'FISHEYE_190':  SphereFisheye190,
+  'FISHEYE_200':  SphereFisheye200,
   '360_CUBE': Cube360,
   'EAC':      EAC,
   'EAC_LR':   EAC_LR
